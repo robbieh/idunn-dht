@@ -12,7 +12,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "gcc"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -22,42 +22,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "log"
-version = "0.1.10"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "regex 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "mio"
 version = "0.0.1"
-source = "git+https://github.com/carllerche/mio#7582a7d08780d228edcb66a97a7fa16516270b70"
+source = "git+https://github.com/carllerche/mio#977ec309fb5accbb069351301067840648c6ab9e"
 dependencies = [
  "bitflags 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nix 0.1.2 (git+https://github.com/carllerche/nix-rust)",
- "time 0.1.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "nix"
 version = "0.1.2"
-source = "git+https://github.com/carllerche/nix-rust#cc277646472996833a8670ddb3f927ff409c4084"
+source = "git+https://github.com/carllerche/nix-rust#3743a257c69ee45656cbfbbf0d0e853145dbf55f"
 dependencies = [
  "bitflags 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "regex"
-version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
 name = "time"
-version = "0.1.14"
+version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "gcc 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gcc 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
