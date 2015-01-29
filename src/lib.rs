@@ -1,22 +1,31 @@
 use std::cmp::Ordering;
-use std::num;
 
 const NODE_ID_SIZE: usize = 32;
 
 #[derive(Show, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct NodeId([u8; NODE_ID_SIZE]);
 
+fn parse_hex_bytes(bytes: &[u8]) -> Option<usize> {
+    let mut result = 0;
+    for &b in bytes.iter() {
+        let d = if b'0' <= b && b <= b'9' { b - b'0' }
+            else if b'A' <= b && b <= b'F' { b - b'A' }
+            else if b'a' <= b && b <= b'f' { b - b'a' }
+            else { return None; };
+        result = (result * 16) + (d as usize);
+    }
+    Some(result)
+}
+
 impl NodeId {
     #[allow(unstable)]
     pub fn from_hexdigest(hex: &str) -> Option<NodeId> {
         if hex.len() != 2 * NODE_ID_SIZE { return None; }
         let mut result = [0u8; NODE_ID_SIZE];
-        for i in (0..NODE_ID_SIZE) {
-            let i2 = i * 2;
-            let digit = &hex[i2..(i2 + 2)];
-            match num::from_str_radix::<u8>(digit, 16) {
+        for (i, bs) in hex.as_bytes().chunks(2).enumerate() {
+            result[i] = match parse_hex_bytes(bs) {
                 None => { return None; },
-                Some(d) => { result[i] = d; }
+                Some(b) => { b as u8 },
             }
         }
         Some(NodeId(result))
@@ -74,5 +83,11 @@ mod tests {
         let mut nids = vec![nid1, nid2];
         nids.sort_by(|a, b| nid3.distance_cmp(a, b));
         assert_eq!(nids, vec![nid2, nid1]);
+    }
+
+    #[test]
+    fn test_safe_parsing() {
+        let nid = NodeId::from_hexdigest("♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥!");
+        assert!(nid.is_none());
     }
 }
