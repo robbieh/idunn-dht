@@ -1,10 +1,11 @@
 use std::cmp::Ordering;
+use std::fmt;
 
 mod util;
 
 const NODE_ID_SIZE: usize = 32;
 
-#[derive(Show, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub struct NodeId([u8; NODE_ID_SIZE]);
 
 impl NodeId {
@@ -32,17 +33,33 @@ impl NodeId {
     }
 }
 
+#[allow(unstable)]
+impl fmt::Display for NodeId {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for &b in self.0.iter() { try!(write!(f, "{:02x}", b)); }
+        Ok(())
+    }
+}
+
+#[allow(unstable)]
+impl fmt::Debug for NodeId {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "NodeId[{}]", self)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{NodeId};
+    use super::*;
 
     #[test]
     fn test_from_hexdigest() {
-        let nid = NodeId::from_hexdigest(
-            "316b370b13056e7358bb33aa85a114471832b295dcc5888b6785697bcf08ad7c");
+        let digest =
+            "316b370b13056e7358bb33aa85a114471832b295dcc5888b6785697bcf08ad7c";
+        let nid = NodeId::from_hexdigest(digest);
         assert!(nid.is_some());
         let nid = nid.unwrap();
-        assert_eq!(nid.0[0], 0x31u8);
+        assert_eq!(format!("{}", nid), digest);
     }
 
     #[test]
