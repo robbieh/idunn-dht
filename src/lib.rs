@@ -1,9 +1,13 @@
+use std::collections::HashMap;
+use std::collections::HashSet;
 use std::cmp::Ordering;
 use std::fmt;
+use std::num::Int;
 
 mod util;
 
 const NODE_ID_SIZE: usize = 32;
+const K: usize = 20;
 
 #[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub struct NodeId([u8; NODE_ID_SIZE]);
@@ -31,6 +35,16 @@ impl NodeId {
         }
         return Ordering::Equal
     }
+
+    pub fn log_distance(&self, other: &NodeId) -> usize {
+        let mut bucket = (NODE_ID_SIZE * 8) - 1;
+        for i in (0..NODE_ID_SIZE) {
+            let b = (self.0[i] ^ other.0[i]).leading_zeros();
+            bucket -= b;
+            if b < 8 { break; }
+        }
+        return bucket;
+    }
 }
 
 #[allow(unstable)]
@@ -45,6 +59,31 @@ impl fmt::Display for NodeId {
 impl fmt::Debug for NodeId {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "NodeId[{}]", self)
+    }
+}
+
+#[derive(Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Debug)]
+pub struct Peer {
+    pub id: NodeId,
+    pub loc: String,
+}
+
+pub struct KBucket<'a> {
+    primary: HashMap<&'a Peer, u32>,
+    backfill: HashMap<&'a Peer, u32>,
+}
+
+pub struct RoutingTable<'a> {
+    id: NodeId,
+    buckets: Vec<KBucket<'a>>,
+    peers: HashSet<Peer>,
+}
+
+impl<'a> RoutingTable<'a> {
+    pub fn lookup(&'a self, node: &NodeId) -> Vec<&'a Peer> {
+        let result = Vec::new();
+        let bucket = &self.buckets[self.id.log_distance(node)];
+        result
     }
 }
 
@@ -96,5 +135,27 @@ mod tests {
     fn test_safe_parsing() {
         let nid = NodeId::from_hexdigest("♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥!");
         assert!(nid.is_none());
+    }
+
+    #[test]
+    fn test_log_distance_0() {
+        let nid1 = NodeId::from_hexdigest(
+            "316b370b13056e7358bb33aa85a114471832b295dcc5888b6785697bcf08ad7c")
+            .unwrap();
+        let nid2 = NodeId::from_hexdigest(
+            "316b370b13056e7358bb33aa85a114471832b295dcc5888b6785697bcf08ad7d")
+            .unwrap();
+        assert_eq!(nid1.log_distance(&nid2), 0);
+    }
+
+    #[test]
+    fn test_log_distance_79() {
+        let nid1 = NodeId::from_hexdigest(
+            "316b370b13056e7358bb33aa85a114471832b295dcc5888b6785697bcf08ad7c")
+            .unwrap();
+        let nid2 = NodeId::from_hexdigest(
+            "316b370b13056e7358bb33aa85a114471832b295dcc500000000000000000000")
+            .unwrap();
+        assert_eq!(nid1.log_distance(&nid2), 79);
     }
 }
