@@ -5,5 +5,5 @@ version = "0.0.1"
 authors = ["Marshall Bockrath-Vandegrift <llasram@gmail.com>",
            "Robbie Huffman <robbie.huffman@gmail.com>"]
 
-[dependencies.mio]
-git = "https://github.com/carllerche/mio"
+#[dependencies.mio]
+#git = "https://github.com/carllerche/mio"

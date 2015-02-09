@@ -1,3 +1,5 @@
+#![allow(dead_code)] 
+
 pub fn parse_hex_bytes(bytes: &[u8]) -> Option<usize> {
     let mut result: usize = 0;
     for &b in bytes.iter() {
