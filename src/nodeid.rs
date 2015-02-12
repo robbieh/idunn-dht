@@ -7,7 +7,7 @@ use std::num::Int;
 
 use util;
 
-const NODE_ID_SIZE: usize = 32;
+pub const NODE_ID_SIZE: usize = 32;
 
 #[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub struct NodeId([u8; NODE_ID_SIZE]);

@@ -35,9 +35,9 @@ pub struct KBucket{
     tree: BTreeMap<NodeId,Rc<RefCell<NodeInfo>>>
 }
 
-impl fmt::Display for KBucket{
+impl fmt::Debug for KBucket{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "kbucket")
+        write!(f, "kbucket: {:?}", self.tree)
     }
 }
 
